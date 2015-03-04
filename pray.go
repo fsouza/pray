@@ -23,7 +23,7 @@ import (
 var srcPackage string
 
 func init() {
-	flag.StringVar(&srcPackage, "source", "", "Source package, to load types from")
+	flag.StringVar(&srcPackage, "src", "", "Source package, to load types from")
 	flag.Usage = func() {
 		fmt.Printf("Usage of %s:\n\n", os.Args[0])
 		fmt.Printf("%s [flags] <import_path1> [import_path2] ... [import_path3]\n\n", os.Args[0])

@@ -5,8 +5,6 @@
 package main
 
 import (
-	"bytes"
-	"errors"
 	"flag"
 	"fmt"
 	"go/ast"
@@ -159,7 +157,7 @@ func runPackage(srcPackage string, dstPackages []string, output io.Writer) error
 				errs <- fmt.Errorf(msg)
 			}
 			if len(result.Serial().Referrers.Refs) < 1 {
-				errs <- fmt.Errorf("%s:%d:%d: %s is unused\n", item.Filename, item.Line, item.Column, item.Identifier)
+				errs <- fmt.Errorf("%s:%d:%d: %s is unused", item.Filename, item.Line, item.Column, item.Identifier)
 			}
 		}(item)
 	}
@@ -173,10 +171,7 @@ func runPackage(srcPackage string, dstPackages []string, output io.Writer) error
 			fmt.Fprintln(output, err)
 			status = 1
 		case <-finish:
-			if status > 0 {
-				return errors.New("FAIL")
-			}
-			return nil
+			os.Exit(status)
 		}
 	}
 }
@@ -184,9 +179,5 @@ func runPackage(srcPackage string, dstPackages []string, output io.Writer) error
 func main() {
 	flag.Parse()
 	dstPackages := flag.Args()
-	var buf bytes.Buffer
-	err := runPackage(srcPackage, dstPackages, &buf)
-	if err != nil {
-		fmt.Fprint(os.Stderr, buf.String())
-	}
+	runPackage(srcPackage, dstPackages, os.Stderr)
 }

@@ -187,7 +187,6 @@ func main() {
 	var buf bytes.Buffer
 	err := runPackage(srcPackage, dstPackages, &buf)
 	if err != nil {
-		fmt.Fprintf(os.Stderr, "%s: FAIL\n", srcPackage)
 		fmt.Fprint(os.Stderr, buf.String())
 	}
 }

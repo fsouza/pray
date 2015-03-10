@@ -5,6 +5,8 @@
 package main
 
 import (
+	"bufio"
+	"bytes"
 	"flag"
 	"fmt"
 	"go/ast"
@@ -14,6 +16,7 @@ import (
 	"go/token"
 	"io"
 	"os"
+	"os/exec"
 	"strings"
 	"sync"
 
@@ -179,6 +182,24 @@ func runPackage(srcPackage string, dstPackages []string, output io.Writer) error
 
 func main() {
 	flag.Parse()
-	dstPackages := flag.Args()
+	dstPackages := expandPackages(flag.Args())
 	runPackage(srcPackage, dstPackages, os.Stderr)
+}
+
+func expandPackages(args []string) []string {
+	var buf bytes.Buffer
+	result := make([]string, 0, len(args))
+	goArgs := append([]string{"list", "-e"}, args...)
+	cmd := exec.Command("go", goArgs...)
+	cmd.Stderr = os.Stderr
+	cmd.Stdout = &buf
+	err := cmd.Run()
+	if err != nil {
+		return args
+	}
+	scanner := bufio.NewScanner(&buf)
+	for scanner.Scan() {
+		result = append(result, scanner.Text())
+	}
+	return result
 }

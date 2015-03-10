@@ -1,6 +1,9 @@
 pray
 ====
 
+[![Build Status](https://travis-ci.org/fsouza/pray.png)](https://travis-ci.org/fsouza/pray)
+[![GoDoc](http://godoc.org/github.com/fsouza/pray?status.png)](http://godoc.org/github.com/fsouza/pray)
+
 pray is a tool for finding unused public variables, constants, types, functions
 and methods. Given a package, it will explore all public items in that package
 and check for the usage of these items in a set of specified packages. Here is
